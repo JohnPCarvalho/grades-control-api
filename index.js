@@ -1,7 +1,8 @@
 import express from 'express';
 import accountsRouter from './routes/accounts.js';
-import { promises as fs } from "fs";
-import { readFile, writeFile } from 'node:fs';
+import {promises as fs, write} from "fs";
+
+const {readFile, writeFile} = fs;
 
 const app = express();
 app.use(express.json());
@@ -17,11 +18,11 @@ app.listen(3000, async () => {
             nextId: 1,
             accounts: []
         }
-        writeFile("accounts.json", JSON.stringify(initialJson)).then(() => {
+        writeFile("./accounts.json", JSON.stringify(initialJson)).then(() => {
             console.log("Api started and file created!");
         }).catch(err => {
             console.log(err);
-        })
+        });
     }
     console.log("API started at " + 3000);
 });
