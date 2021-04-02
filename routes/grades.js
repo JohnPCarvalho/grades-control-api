@@ -103,4 +103,23 @@ router.get("/gettotalgrade", async (req, res) => {
   }
 })
 
+router.get("/gettotalbysubject", async (req, res) => {
+  try {
+    const grade = req.body;
+    const data = JSON.parse(await readFile(global.__filename));
+
+    const query = data.grades.filter(item => item.subject === grade.subject && item.type === grade.type);
+    console.log(query);
+
+    let sum = 0
+    query.map(item => {
+      sum += item.value;
+    })
+    let media = sum / query.length;
+    res.send(media.toFixed(2));
+  } catch (err) {
+    res.status(400).send({error: err.message});
+  }
+})
+
 export default router;
