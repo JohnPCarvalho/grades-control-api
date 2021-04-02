@@ -122,4 +122,22 @@ router.get("/gettotalbysubject", async (req, res) => {
   }
 })
 
+router.get("/getbestthree", async (req, res) => {
+  try {
+    const grade = req.body;
+    const data = JSON.parse(await readFile(global.__filename));
+
+    const query = data.grades.filter(item => item.subject === grade.subject && item.type === grade.type);
+
+    const values = query.map(item => {
+      return item.value
+    });
+    let highNumber = values.sort(function(a, b){return b-a});
+    res.send({valor1: values[0], valor2: values[1], valor3: values[2]});
+
+  } catch (err) {
+    res.status(400).send({error: err.message});
+  }
+})
+
 export default router;
