@@ -45,4 +45,23 @@ router.put("/updategrade/:id", async (req, res) => {
   res.end();
 })
 
+router.delete("/deletegrade/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const data = JSON.parse(await readFile(global.__filename));
+    const foundUser = data.grades.find(grade => grade.id == id);
+    if (foundUser == undefined) {
+      res.status(404).send({error: "Invalid code"}).end();
+    }
+
+    data.grades = data.grades.filter(
+      grade => grade.id !== parseInt(id));
+  
+    await writeFile(global.__filename, JSON.stringify(data));
+    res.end();
+  } catch (err) {
+    res.status(400).send({error: err.message});
+  }
+})
+
 export default router;
