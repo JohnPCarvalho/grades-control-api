@@ -64,4 +64,21 @@ router.delete("/deletegrade/:id", async (req, res) => {
   }
 })
 
+router.get("/getgrade/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = JSON.parse(await readFile(global.__filename), 2, null);
+    
+    const foundUser = data.grades.find(grade => grade.id == id);
+    if (foundUser == undefined) {
+      res.status(404).send({error: "Id does not exist"});
+    }
+    res.send(foundUser);
+
+  } catch (err) {
+    res.status(400).send({message: err});
+  }
+  
+});
+
 export default router;
