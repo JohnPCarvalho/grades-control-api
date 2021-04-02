@@ -68,7 +68,7 @@ router.get("/getgrade/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const data = JSON.parse(await readFile(global.__filename), 2, null);
-    
+
     const foundUser = data.grades.find(grade => grade.id == id);
     if (foundUser == undefined) {
       res.status(404).send({error: "Id does not exist"});
@@ -80,5 +80,27 @@ router.get("/getgrade/:id", async (req, res) => {
   }
   
 });
+
+router.get("/gettotalgrade", async (req, res) => {
+  try {
+    const grade = req.body;
+    const data = JSON.parse(await readFile(global.__filename));
+
+    const student = data.grades.filter(student => student.student === grade.student);
+    const result = student.filter(students => students.subject === grade.subject);
+    const values = result.map(item => {
+      return item.value;
+    })
+
+    let total = 0;
+    for (let i = 0; i < values.length; i++) {
+      total += values[i];
+    }
+
+    res.send({Total: total, ...student});
+    }catch (err) {
+    res.status(400).send({error: err.message});
+  }
+})
 
 export default router;
